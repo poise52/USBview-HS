@@ -1,0 +1,41 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build:
+    name: Build and test (macOS arm64)
+    runs-on: macos-15
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+        with:
+          persist-credentials: false
+
+      - uses: haskell-actions/setup@0f8e8c99d88aeb3fbfd523f1ef2c6f762d10d64d # v2
+        with:
+          ghc-version: '9.10.3'
+          cabal-version: '3.16.1.0'
+
+      - run: make test
+
+      - name: Archive the tested app
+        working-directory: build
+        run: ditto -c -k --norsrc --keepParent USBviewHS.app USBviewHS-macos-arm64.zip
+
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        with:
+          name: USBviewHS-macos-arm64
+          path: build/USBviewHS-macos-arm64.zip
+          if-no-files-found: error
+          compression-level: 0

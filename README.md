@@ -76,6 +76,8 @@ Run `make test` to check both languages together. It runs the topology and Swift
 
 To publish a release, push a tag in the form `v1.2.3`. GitHub Actions uses the tag for the app version, runs `make test`, and publishes the Apple Silicon ZIP and its SHA-256 checksum.
 
+Every push to `main` and every pull request targeting it also runs `make test`. Download the tested app from the CI run’s **Artifacts** section. To build a release for an existing tag, open **Actions → Release for Apple Silicon → Run workflow**, select `main`, and enter the tag.
+
 ## License
 
 USBview HS is distributed under the [MIT License](LICENSE).

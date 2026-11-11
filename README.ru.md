@@ -76,6 +76,8 @@ cabal repl exe:usbview-hs
 
 Чтобы опубликовать релиз, отправьте на GitHub тег вида `v1.2.3`. GitHub Actions возьмёт версию приложения из тега, выполнит `make test` и опубликует ZIP для Apple Silicon вместе с контрольной суммой SHA-256.
 
+CI запускает `make test` при каждом пуше в `main` и для каждого pull request в эту ветку. Проверенную сборку можно скачать в разделе **Artifacts** соответствующего запуска. Чтобы собрать релиз по существующему тегу, откройте **Actions → Release for Apple Silicon → Run workflow**, выберите `main` и введите тег.
+
 ## Лицензия
 
 USBview HS распространяется под [лицензией MIT](LICENSE).
