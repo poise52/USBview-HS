@@ -10,6 +10,12 @@ USBview HS — инспектор USB для macOS. Он показывает, �
 
 Для macOS 15 и новее скачайте архив с окончанием `macos-arm64.zip` из [релизов на GitHub](https://github.com/poise52/USBview-HS/releases), распакуйте его и перенесите `USBviewHS.app` в папку «Программы». Релизные сборки используют подпись ad hoc и не проходят нотаризацию Apple.
 
+Если при первом запуске macOS сообщает, что не может проверить разработчика, выполните команду в Терминале и снова откройте USBviewHS:
+
+```sh
+xattr -dr com.apple.quarantine "/Applications/USBviewHS.app"
+```
+
 ## Сборка и запуск
 
 Для сборки нужны macOS 15 или новее, Xcode с macOS SDK и компилятором Swift 6, GHC, cabal-install и Make. Из корня репозитория выполните

@@ -10,6 +10,12 @@ The app pairs a SwiftUI window with a Haskell command-line tool. Both read the s
 
 On macOS 15 or later, download the archive ending in `-macos-arm64.zip` from [GitHub Releases](https://github.com/poise52/USBview-HS/releases), unzip it, and move `USBviewHS.app` to Applications. Release builds use an ad hoc signature and are not notarized by Apple.
 
+If macOS blocks the first launch because it cannot verify the developer, run this command in Terminal, then open USBviewHS again:
+
+```sh
+xattr -dr com.apple.quarantine "/Applications/USBviewHS.app"
+```
+
 ## Build and launch
 
 You need macOS 15 or later, Xcode with the macOS SDK and a Swift 6 compiler, GHC, cabal-install, and Make. From the repository root, run
