@@ -6,6 +6,10 @@ USBview HS is a USB inspector for macOS. It shows how devices connect through po
 
 The app pairs a SwiftUI window with a Haskell command-line tool. Both read the same USB topology from the macOS I/O Registry. The interface opens in Russian. Choose **English** in **Настройки → Язык интерфейса** to switch immediately.
 
+## Install on Apple Silicon
+
+On macOS 15 or later, download the archive ending in `-macos-arm64.zip` from [GitHub Releases](https://github.com/poise52/USBview-HS/releases), unzip it, and move `USBviewHS.app` to Applications. Release builds use an ad hoc signature and are not notarized by Apple.
+
 ## Build and launch
 
 You need macOS 15 or later, Xcode with the macOS SDK and a Swift 6 compiler, GHC, cabal-install, and Make. From the repository root, run
@@ -69,6 +73,8 @@ cabal repl exe:usbview-hs
 ```
 
 Run `make test` to check both languages together. It runs the topology and Swift tests, decodes a live snapshot from the bundled executable, and verifies the app signature.
+
+To publish a release, push a tag in the form `v1.2.3`. GitHub Actions uses the tag for the app version, runs `make test`, and publishes the Apple Silicon ZIP and its SHA-256 checksum.
 
 ## License
 

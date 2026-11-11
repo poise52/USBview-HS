@@ -1,0 +1,64 @@
+name: Release for Apple Silicon
+
+on:
+  push:
+    tags: ['v[0-9]+.[0-9]+.[0-9]+']
+
+permissions:
+  contents: write
+
+concurrency:
+  group: release-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  release:
+    if: github.event.deleted == false
+    runs-on: macos-15
+    defaults:
+      run:
+        shell: bash
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+        with:
+          persist-credentials: false
+
+      - uses: haskell-actions/setup@0f8e8c99d88aeb3fbfd523f1ef2c6f762d10d64d # v2
+        with:
+          ghc-version: '9.10.3'
+          cabal-version: '3.16.1.0'
+
+      - name: Build and test the release bundle
+        run: |
+          plutil -replace CFBundleShortVersionString -string "${GITHUB_REF_NAME#v}" app/Info.plist
+          plutil -replace CFBundleVersion -string "$GITHUB_RUN_NUMBER" app/Info.plist
+          make test
+
+      - name: Package the Apple Silicon app
+        working-directory: build
+        run: |
+          for binary in USBviewHS.app/Contents/{MacOS/USBviewHS,Helpers/usbview-hs}; do
+            lipo -verify_arch arm64 "$binary"
+          done
+          archive="USBviewHS-${GITHUB_REF_NAME#v}-macos-arm64.zip"
+          ditto -c -k --norsrc --keepParent USBviewHS.app "$archive"
+          shasum -a 256 "$archive" > "$archive.sha256"
+
+      - name: Publish GitHub Release
+        working-directory: build
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+        run: |
+          tag="$GITHUB_REF_NAME"
+          if draft=$(gh release view "$tag" --json isDraft --jq '.isDraft'); then
+            if [[ "$draft" == false ]]; then
+              echo "Release $tag is already published."
+              exit 0
+            fi
+          else
+            gh release create "$tag" --verify-tag --draft --generate-notes --title "USBview HS ${tag#v}"
+          fi
+          archive="USBviewHS-${tag#v}-macos-arm64.zip"
+          gh release upload "$tag" "$archive" "$archive.sha256" --clobber
+          gh release edit "$tag" --draft=false
