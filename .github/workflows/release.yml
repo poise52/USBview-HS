@@ -20,8 +20,9 @@ concurrency:
 jobs:
   release:
     if: github.event_name == 'workflow_dispatch' || github.event.deleted == false
-    runs-on: macos-15
+    runs-on: xcode-27
     env:
+      DEVELOPER_DIR: /Applications/Xcode_27.2.app/Contents/Developer
       RELEASE_TAG: ${{ inputs.tag || github.ref_name }}
     defaults:
       run:
@@ -46,6 +47,8 @@ jobs:
 
       - name: Build and test the release bundle
         run: |
+          xcodebuild -version
+          xcrun swiftc -version
           plutil -replace CFBundleShortVersionString -string "${RELEASE_TAG#v}" app/Info.plist
           plutil -replace CFBundleVersion -string "$GITHUB_RUN_NUMBER" app/Info.plist
           make test

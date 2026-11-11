@@ -15,6 +15,10 @@ struct ContentView: View {
     @State private var journal = false
     @State private var requestedReconnect: USBNode?
 
+    init(model: Inspector) {
+        self.model = model
+    }
+
     private var rows: [TreeLine] {
         func flatten(_ nodes: [USBNode], level: Int) -> [TreeLine] {
             nodes.flatMap { node in

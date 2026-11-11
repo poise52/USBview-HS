@@ -30,6 +30,11 @@ struct ObserveUSB: ViewModifier {
     private var preferences = InspectorPreferences()
     private var interval: Int? { preferences.live ? preferences.seconds : nil }
 
+    init(model: Inspector, surface: Inspector.Surface) {
+        self.model = model
+        self.surface = surface
+    }
+
     func body(content: Content) -> some View {
         content
             .onAppear { model.observe(surface, every: interval) }
