@@ -1,0 +1,26 @@
+# Build products
+/build/
+/.build/
+/DerivedData/
+/dist-newstyle/
+/.stack-work/
+*.dSYM/
+
+# GHC output from compiling outside build/
+*.hi
+*.hie
+*.o
+*.dyn_hi
+*.dyn_o
+*.p_hi
+*.p_o
+
+# Local IDE and macOS files
+/.idea/
+xcuserdata/
+*.xcuserstate
+.DS_Store
+
+# Local USB captures from the README and the app's export dialog
+/topology.json
+/usb-topology.json
